@@ -31,6 +31,60 @@ function useInView(options) {
   return [ref, inView];
 }
 
+function formatUsd(n) {
+  if (n == null || Number.isNaN(n)) return null;
+  if (n >= 1e9) return `$${(n / 1e9).toFixed(2)}B`;
+  if (n >= 1e6) return `$${(n / 1e6).toFixed(2)}M`;
+  if (n >= 1e3) return `$${(n / 1e3).toFixed(1)}K`;
+  return `$${Math.round(n)}`;
+}
+
+// Polls Dexscreener for a live market cap once a real contract is configured.
+// Pre-launch (contract === "TBA") it does nothing and the placeholder is shown.
+function useLiveMarketCap(refreshMs = 30000) {
+  const [data, setData] = useState(null);
+  useEffect(() => {
+    const contract = token.contract;
+    const isAddress =
+      contract && contract !== "TBA" && /^(0x)?[a-zA-Z0-9]{25,}$/.test(contract);
+    if (!isAddress) return;
+
+    let active = true;
+    const controller = new AbortController();
+
+    const load = async () => {
+      try {
+        const url =
+          token.pairAddress && token.chainId
+            ? `https://api.dexscreener.com/latest/dex/pairs/${token.chainId}/${token.pairAddress}`
+            : `https://api.dexscreener.com/latest/dex/tokens/${contract}`;
+        const res = await fetch(url, { signal: controller.signal });
+        if (!res.ok) return;
+        const json = await res.json();
+        const pairs = json?.pairs || (json?.pair ? [json.pair] : []);
+        if (!pairs.length) return;
+        const best = pairs.reduce((a, b) =>
+          (b?.liquidity?.usd || 0) > (a?.liquidity?.usd || 0) ? b : a
+        );
+        const marketCap = best.marketCap ?? best.fdv ?? null;
+        const change24h = best.priceChange?.h24 ?? null;
+        if (active && marketCap != null) setData({ marketCap, change24h });
+      } catch {
+        /* network/abort errors ignored; keep last known value */
+      }
+    };
+
+    load();
+    const id = window.setInterval(load, refreshMs);
+    return () => {
+      active = false;
+      controller.abort();
+      window.clearInterval(id);
+    };
+  }, [refreshMs]);
+  return data;
+}
+
 /* ------------------------------------------------------------------ *
  * Data
  * ------------------------------------------------------------------ */
@@ -43,6 +97,11 @@ const token = {
   swapUrl: "#",
   bridgeUrl: "#",
   supply: "1,000,000,000",
+  // Live market data (Dexscreener). On launch, set `contract` to the real token
+  // address. Optionally pin an exact market by also setting both `chainId`
+  // (Dexscreener chain slug, e.g. "arbitrum") and `pairAddress`.
+  chainId: "",
+  pairAddress: "",
 };
 
 const socials = {
@@ -72,7 +131,7 @@ const manifesto = [
   {
     n: "01",
     title: "The portfolio was asleep.",
-    body: "They told you to dollar-cost average, wait forty years, and be grateful for a beige target-date fund. Roth6900 rejects the nap. The retirement account is awake now.",
+    body: "They told you to dollar-cost average, wait forty years, and be grateful for retirement. Roth6900 rejects the nap. The retirement account is awake now.",
   },
   {
     n: "02",
@@ -504,7 +563,7 @@ function HeroForm() {
             </div>
             <div className="mt-5 grid gap-5 sm:grid-cols-[1fr_0.92fr]">
               <div className="space-y-3">
-                <FormField n="1a" label="Applicant" value="terminal allocator" />
+                <FormField n="1a" label="Applicant" value="" />
                 <FormField n="1b" label="Ticker requested" value={token.ticker} />
                 <FormField n="2" label="Chain" value={token.chain} />
                 <FormField n="3" label="Contribution" value="$6,900 vibes" />
@@ -523,9 +582,7 @@ function HeroForm() {
             </div>
             <div className="mt-6 grid grid-cols-[1.5fr_1fr] gap-6">
               <div>
-                <div className="h-9 border-b-2 border-ink font-serif text-2xl italic leading-9 text-ink/80">
-                  John Smith
-                </div>
+                <div className="h-9 border-b-2 border-ink font-serif text-2xl italic leading-9 text-ink/80"></div>
                 <div className="mt-1 font-mono text-[9px] uppercase tracking-[0.18em] text-ink/45">
                   Signature of applicant
                 </div>
@@ -542,7 +599,7 @@ function HeroForm() {
             <div className="mt-5 flex items-end justify-between gap-4 border-t border-ink pt-3">
               <Barcode className="h-8 w-40" />
               <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-ink/45">
-                Do not detach · keep for your memes
+                Do not detach
               </span>
             </div>
           </div>
@@ -561,16 +618,15 @@ function Hero() {
             <span className="h-2 w-2 bg-rh" />
             First Roth IRA memecoin on {token.chain}
           </div>
-          <h1 className="rise mt-6 font-serif text-[clamp(4.2rem,11vw,11rem)] font-black leading-[0.8] [animation-delay:90ms]">
-            Roth<span className="block text-rh">6900</span>
+          <h1 className="rise mt-6 [animation-delay:90ms]">
+            <img
+              src="/roth6900-logo.png"
+              alt="Roth6900"
+              className="w-full max-w-md"
+            />
           </h1>
           <p className="rise mt-7 max-w-2xl font-serif text-3xl font-bold leading-[1.05] sm:text-[2.6rem] [animation-delay:180ms]">
-            A retirement prospectus for a coin that is <em className="text-rh">absolutely not</em> a
-            retirement account.
-          </p>
-          <p className="rise mt-6 max-w-xl text-base leading-7 text-ink/70 [animation-delay:260ms]">
-            Roth6900 turns the meme into a fake contribution form: audited by nobody, approved by
-            the timeline, and stamped green for dramatic effect.
+            Don't buy a Roth IRA. Buy <em className="text-rh">Roth6900</em> and retire.
           </p>
           <div className="rise mt-8 flex flex-col gap-3 sm:flex-row [animation-delay:340ms]">
             <a
@@ -684,15 +740,35 @@ function Chain() {
 }
 
 function Ledger() {
+  const live = useLiveMarketCap();
+  const isLive = live?.marketCap != null;
+
+  const rows = ledger.map((row) => {
+    if (row.label === "Meme cap" && isLive) {
+      const change =
+        live.change24h != null
+          ? `${live.change24h >= 0 ? "+" : ""}${live.change24h.toFixed(2)}%`
+          : row.change;
+      return {
+        ...row,
+        value: formatUsd(live.marketCap) ?? row.value,
+        change,
+        up: live.change24h != null ? live.change24h >= 0 : row.up,
+        live: true,
+      };
+    }
+    return row;
+  });
+
   return (
     <section className="border-b-2 border-ink bg-cream px-4 py-10">
       <div className="mx-auto max-w-page">
         <div className="mb-3 flex items-baseline justify-between font-mono text-[10px] uppercase tracking-[0.2em] text-ink/50">
           <span>Ledger of imaginary performance</span>
-          <span>Unaudited · obviously</span>
+          <span>{isLive ? "Live · Dexscreener" : "Unaudited · obviously"}</span>
         </div>
         <div className="border-2 border-ink bg-paper">
-          {ledger.map((row, i) => (
+          {rows.map((row, i) => (
             <div
               key={row.label}
               className="grid grid-cols-[1fr_auto] items-center gap-3 border-b border-ink px-5 py-4 last:border-b-0 sm:grid-cols-[1.2fr_1fr_auto_auto]"
@@ -700,6 +776,12 @@ function Ledger() {
               <div className="font-mono text-[11px] uppercase tracking-[0.16em] text-ink/60">
                 <span className="mr-2 tabular-nums text-ink/35">{String(i + 1).padStart(2, "0")}</span>
                 {row.label}
+                {row.live && (
+                  <span className="ml-2 inline-flex items-center gap-1 align-middle text-rh">
+                    <span className="h-1.5 w-1.5 rounded-full bg-rh" />
+                    Live
+                  </span>
+                )}
               </div>
               <Sparkline data={row.spark} up={row.up} className="hidden h-8 w-32 sm:block" />
               <div className="text-right font-serif text-3xl font-black tabular-nums leading-none">
