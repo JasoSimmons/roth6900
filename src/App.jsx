@@ -129,13 +129,13 @@ const marqueeItems = [
 const manifesto = [
   {
     n: "01",
-    title: "The portfolio was asleep.",
-    body: "They told you to dollar-cost average, wait forty years, and be grateful for retirement. Roth6900 rejects the nap. The retirement account is awake now.",
+    title: "You were sold a lie.",
+    body: "They told you to dollar-cost average, wait forty years, and be grateful for retirement. Roth6900 is the complete opposite. Buy. Get rich quick. Retire.",
   },
   {
     n: "02",
     title: "A Roth IRA is not Roth6900.",
-    body: "A Roth IRA locks your money up until 59½, caps what you can put in, and pays you back with a slow, modest tax break. Roth6900 is the opposite: no age gate, no contribution limit, no forty-year wait — just belief, green candles, and a meme that compounds on the timeline.",
+    body: "A Roth IRA locks your money up until 59½, caps what you can put in, and pays you back with a slow, modest tax break. Roth6900 is the opposite: no age gate, no contribution limit, no forty-year wait, just belief, green candles, and a meme that compounds.",
   },
   {
     n: "03",
@@ -187,7 +187,7 @@ function makeSpark(seed, bias) {
 
 const ledger = [
   { label: "Meme cap", value: "$690K", change: "+69.00%", up: true, spark: makeSpark(3, 24) },
-  { label: "Retirement age", value: "59.5", change: "vesting in belief", up: true, spark: makeSpark(9, 10) },
+  { label: "Retirement age", value: "NOW", change: "vesting in belief", up: true, spark: makeSpark(9, 10) },
   { label: "Tax benefit", value: "0", change: "not a real IRA", up: false, spark: makeSpark(14, -8) },
   { label: "Chain status", value: "LIVE", change: "mainnet", up: true, spark: makeSpark(21, 18) },
 ];
@@ -572,7 +572,7 @@ function Hero() {
         <section>
           <div className="rise inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.22em] text-ink/70">
             <span className="h-2 w-2 bg-rh" />
-            First Roth IRA memecoin on {token.chain}
+            First Roth IRA on {token.chain}
           </div>
           <h1 className="rise mt-6 font-serif text-[clamp(4.2rem,11vw,11rem)] font-black leading-[0.8] [animation-delay:90ms]">
             Roth<span className="block text-rh">6900</span>
@@ -748,6 +748,12 @@ function Checklist() {
 }
 
 function Tokenomics() {
+  const chartUrl =
+    token.chartUrl && token.chartUrl !== "#"
+      ? token.chartUrl
+      : token.contract && token.contract !== "TBA"
+      ? `https://dexscreener.com/search?q=${encodeURIComponent(token.contract)}`
+      : null;
   return (
     <Section id="tokenomics" eyebrow="Part III" page="5" title="Cap table, before the contract exists.">
       <div className="grid gap-6 lg:grid-cols-[1fr_1.25fr]">
@@ -770,9 +776,23 @@ function Tokenomics() {
               Contract, buy, swap, bridge, chart, socials, and liquidity proof are intentionally
               marked TODO until cracka sends the real launch values.
             </p>
-            <div className="mt-6 border border-ink bg-cream p-4">
-              <TokenomicsChart />
-            </div>
+            {chartUrl ? (
+              <a
+                href={chartUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group mt-6 block border border-ink bg-cream p-4 transition-colors hover:border-rh"
+              >
+                <TokenomicsChart />
+                <div className="mt-2 flex items-center justify-end font-mono text-[9px] uppercase tracking-[0.16em] text-ink/50 group-hover:text-rh">
+                  View live chart ↗
+                </div>
+              </a>
+            ) : (
+              <div className="mt-6 border border-ink bg-cream p-4">
+                <TokenomicsChart />
+              </div>
+            )}
           </div>
         </Reveal>
         <div className="flex flex-col justify-center border-2 border-ink bg-paper">
