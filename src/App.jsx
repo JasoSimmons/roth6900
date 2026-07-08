@@ -265,34 +265,6 @@ function Sparkline({ data, up, className = "" }) {
   );
 }
 
-function ContractCopy({ value, label = "CONTRACT", className = "" }) {
-  const [copied, setCopied] = useState(false);
-  const shortValue =
-    value.length > 18 ? `${value.slice(0, 8)}...${value.slice(-6)}` : value;
-  const copy = async () => {
-    try {
-      await navigator.clipboard.writeText(value);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1400);
-    } catch {
-      /* clipboard unavailable */
-    }
-  };
-  return (
-    <button
-      onClick={copy}
-      className={`btn-print group inline-flex max-w-full items-center gap-2 bg-paper px-3 py-2 font-mono text-[11px] uppercase tracking-[0.1em] text-ink hover:bg-cream ${className}`}
-      aria-label={`Copy ${label}`}
-    >
-      <span className="text-ink/55">{label}</span>
-      <span className="break-all font-bold text-ink">{shortValue}</span>
-      <span className={`text-[10px] ${copied ? "text-rh" : "text-red"}`}>
-        {copied ? "COPIED" : "COPY"}
-      </span>
-    </button>
-  );
-}
-
 function FormField({ n, label, value }) {
   return (
     <div className="border-b border-ink pb-2">
@@ -567,9 +539,6 @@ function Hero() {
               View price form
             </a>
           </div>
-          <div className="rise mt-6 [animation-delay:420ms]">
-            <ContractCopy value={token.contract} label="CONTRACT" />
-          </div>
         </section>
         <Reveal className="relative">
           <HeroForm />
@@ -723,23 +692,7 @@ function Checklist() {
 function Tokenomics() {
   return (
     <Section id="tokenomics" eyebrow="Part III" page="5" title="Cap table, on the record.">
-      <Reveal>
-        <div className="flex flex-wrap items-center justify-between gap-4 border-2 border-ink bg-paper p-5">
-          <div>
-            <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink/55">
-              Contract
-            </div>
-            <div className="mt-2">
-              <ContractCopy value={token.contract} label="CONTRACT" />
-            </div>
-          </div>
-          <span className="inline-flex shrink-0 items-center gap-1.5 border border-rh px-2 py-1 font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-ink">
-            <span className="h-1.5 w-1.5 rounded-full bg-rh" />
-            Live
-          </span>
-        </div>
-      </Reveal>
-      <div className="mt-6 border-2 border-ink bg-paper">
+      <div className="border-2 border-ink bg-paper">
         {tokenomicsRows.map((row, i) => (
           <Reveal key={row.label} delay={i * 0.04}>
             <article className="grid gap-3 border-b border-ink p-5 last:border-b-0 sm:grid-cols-[0.6fr_0.8fr_1fr]">
