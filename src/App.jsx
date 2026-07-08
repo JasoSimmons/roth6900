@@ -417,35 +417,6 @@ function Certificate() {
   );
 }
 
-function TokenomicsChart() {
-  const bars = [110, 82, 144, 56, 94, 120];
-  return (
-    <svg viewBox="0 0 520 220" className="h-56 w-full" aria-label="Roth6900 tokenomics sheet chart">
-      <rect width="520" height="220" fill="#fff8e7" />
-      <path
-        d="M32 34H488M32 74H488M32 114H488M32 154H488M32 194H488"
-        stroke="#11120f"
-        strokeOpacity="0.16"
-      />
-      {[72, 148, 224, 300, 376, 452].map((cx, i) => (
-        <rect key={cx} x={cx - 18} y={188 - bars[i]} width="36" height={bars[i]} fill="#96D002" />
-      ))}
-      <path
-        d="M54 170 C120 150 151 92 224 78 C302 63 340 119 452 64"
-        fill="none"
-        stroke="#11120f"
-        strokeWidth="4"
-      />
-      <text x="32" y="24" fontFamily="IBM Plex Mono, monospace" fontSize="12" fontWeight="700" fill="#11120f">
-        IMAGINARY SUPPLY LEDGER / FIXED PLACEHOLDER
-      </text>
-      <text x="32" y="214" fontFamily="IBM Plex Mono, monospace" fontSize="10" fill="#11120f">
-        1,000,000,000 SUPPLY · 0% TAX PLACEHOLDER · LP PROOF TODO
-      </text>
-    </svg>
-  );
-}
-
 function Section({ id, eyebrow, page, title, children }) {
   return (
     <section id={id} className="relative border-b-2 border-ink px-4 py-16 sm:py-20">
@@ -750,83 +721,39 @@ function Checklist() {
 }
 
 function Tokenomics() {
-  // Embed the real Dexscreener chart once a pair is configured (chainId + pairAddress).
-  const embedUrl =
-    token.chainId && token.pairAddress
-      ? `https://dexscreener.com/${token.chainId}/${token.pairAddress}?embed=1&theme=light&trades=0&info=0`
-      : null;
-  const chartUrl =
-    token.chartUrl && token.chartUrl !== "#"
-      ? token.chartUrl
-      : token.contract && token.contract !== "TBA"
-      ? `https://dexscreener.com/search?q=${encodeURIComponent(token.contract)}`
-      : null;
   return (
     <Section id="tokenomics" eyebrow="Part III" page="5" title="Cap table, on the record.">
-      <div className="grid gap-6 lg:grid-cols-[1fr_1.25fr]">
-        <Reveal className="h-full">
-          <div className="flex h-full flex-col border-2 border-ink bg-paper p-5">
-            <div className="flex items-start justify-between gap-4 border-b-2 border-ink pb-4">
-              <div>
-                <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink/55">
-                  Contract
-                </div>
-                <div className="mt-2">
-                  <ContractCopy value={token.contract} label="CONTRACT" />
-                </div>
-              </div>
-              <span className="inline-flex shrink-0 items-center gap-1.5 border border-rh px-2 py-1 font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-ink">
-                <span className="h-1.5 w-1.5 rounded-full bg-rh" />
-                Live
-              </span>
+      <Reveal>
+        <div className="flex flex-wrap items-center justify-between gap-4 border-2 border-ink bg-paper p-5">
+          <div>
+            <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink/55">
+              Contract
             </div>
-            {embedUrl ? (
-              <div className="mt-6 flex-1 border border-ink bg-paper">
-                <iframe
-                  src={embedUrl}
-                  title="Roth6900 live chart"
-                  loading="lazy"
-                  className="h-full min-h-[22rem] w-full"
-                />
-              </div>
-            ) : chartUrl ? (
-              <a
-                href={chartUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group mt-6 flex flex-1 flex-col justify-center border border-ink bg-cream p-4 transition-colors hover:border-rh"
-              >
-                <TokenomicsChart />
-                <div className="mt-2 flex items-center justify-end font-mono text-[9px] uppercase tracking-[0.16em] text-ink/50 group-hover:text-rh">
-                  View live chart ↗
-                </div>
-              </a>
-            ) : (
-              <div className="mt-6 flex flex-1 flex-col items-center justify-center gap-2 border border-ink bg-cream p-4 text-center">
-                <div className="font-serif text-4xl font-black leading-none">Chart coming soon</div>
-                <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink/55">
-                  Live on launch
-                </div>
-              </div>
-            )}
+            <div className="mt-2">
+              <ContractCopy value={token.contract} label="CONTRACT" />
+            </div>
           </div>
-        </Reveal>
-        <div className="flex flex-col justify-center border-2 border-ink bg-paper">
-          {tokenomicsRows.map((row, i) => (
-            <Reveal key={row.label} delay={i * 0.04}>
-              <article className="grid gap-3 border-b border-ink p-5 last:border-b-0 sm:grid-cols-[0.6fr_0.8fr_1fr]">
-                <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink/55">
-                  <span className="mr-2 text-ink/35">{String(i + 1).padStart(2, "0")}</span>
-                  {row.label}
-                </div>
-                <div className="break-words font-serif text-3xl font-black tabular-nums leading-none">
-                  {row.value}
-                </div>
-                <p className="text-sm leading-6 text-ink/70">{row.note}</p>
-              </article>
-            </Reveal>
-          ))}
+          <span className="inline-flex shrink-0 items-center gap-1.5 border border-rh px-2 py-1 font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-ink">
+            <span className="h-1.5 w-1.5 rounded-full bg-rh" />
+            Live
+          </span>
         </div>
+      </Reveal>
+      <div className="mt-6 border-2 border-ink bg-paper">
+        {tokenomicsRows.map((row, i) => (
+          <Reveal key={row.label} delay={i * 0.04}>
+            <article className="grid gap-3 border-b border-ink p-5 last:border-b-0 sm:grid-cols-[0.6fr_0.8fr_1fr]">
+              <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink/55">
+                <span className="mr-2 text-ink/35">{String(i + 1).padStart(2, "0")}</span>
+                {row.label}
+              </div>
+              <div className="break-words font-serif text-3xl font-black tabular-nums leading-none">
+                {row.value}
+              </div>
+              <p className="text-sm leading-6 text-ink/70">{row.note}</p>
+            </article>
+          </Reveal>
+        ))}
       </div>
     </Section>
   );
