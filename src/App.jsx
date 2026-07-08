@@ -96,7 +96,7 @@ const token = {
   chartUrl: "#",
   swapUrl: "#",
   bridgeUrl: "#",
-  supply: "1,000,000,000",
+  supply: "1B",
   // Live market data (Dexscreener). On launch, set `contract` to the real token
   // address. Optionally pin an exact market by also setting both `chainId`
   // (Dexscreener chain slug, e.g. "arbitrum") and `pairAddress`.
@@ -105,13 +105,12 @@ const token = {
 };
 
 const socials = {
-  x: { label: "X", href: "#", note: "TODO: official X" },
+  x: { label: "X", href: "https://x.com/roth6900", note: "Follow @Roth6900" },
   dexscreener: { label: "Dexscreener", href: "#", note: "TODO: chart link" },
 };
 
 const navLinks = [
   { label: "Manifesto", href: "#manifesto" },
-  { label: "Chain", href: "#chain" },
   { label: "Buy", href: "#buy" },
   { label: "Tokenomics", href: "#tokenomics" },
   { label: "Community", href: "#community" },
@@ -135,40 +134,13 @@ const manifesto = [
   },
   {
     n: "02",
-    title: "The index had 500. We found 6900.",
-    body: "SPX had a number. Roth has a wrapper. Roth6900 adds the part the spreadsheet never modeled: belief, chaos, green candles, and a contribution limit made entirely of vibes.",
+    title: "A Roth IRA is not Roth6900.",
+    body: "A Roth IRA locks your money up until 59½, caps what you can put in, and pays you back with a slow, modest tax break. Roth6900 is the opposite: no age gate, no contribution limit, no forty-year wait — just belief, green candles, and a meme that compounds on the timeline.",
   },
   {
     n: "03",
     title: "This is not tax advice. It is tax theater.",
-    body: "Roth6900 is not a retirement product and gives you no IRA benefits. That is exactly why the ticker can say the quiet part loudly: the meme is the account.",
-  },
-];
-
-const chainFacts = [
-  {
-    label: "Public mainnet",
-    value: "Jul 1, 2026",
-    body: "Robinhood announced the public mainnet of Robinhood Chain during its global expansion keynote.",
-    source: "Robinhood Newsroom",
-  },
-  {
-    label: "Settlement rail",
-    value: "Arbitrum L2",
-    body: "The chain is described by Robinhood as a Layer 2 built using the Arbitrum Platform to institutional standards.",
-    source: "Robinhood Newsroom",
-  },
-  {
-    label: "Design target",
-    value: "RWAs + DeFi",
-    body: "Robinhood frames the chain as permissionless infrastructure for financial services and tokenized real-world assets.",
-    source: "Robinhood Chain",
-  },
-  {
-    label: "Trading mood",
-    value: "24/7",
-    body: "Robinhood says eligible users can access stock-token trading on Robinhood Chain in supported jurisdictions.",
-    source: "Robinhood Newsroom",
+    body: "Roth6900 is not a retirement product and gives you no IRA benefits.",
   },
 ];
 
@@ -200,10 +172,10 @@ const checklist = [
 ];
 
 const tokenomicsRows = [
-  { label: "Ticker", value: token.ticker, note: "TODO: confirm final ticker" },
-  { label: "Supply", value: token.supply, note: "Fixed meme supply placeholder" },
-  { label: "Tax", value: "0%", note: "Placeholder until launch mechanics are confirmed" },
-  { label: "LP", value: "TBA", note: "TODO: publish liquidity proof" },
+  { label: "Ticker", value: token.ticker, note: "The official Roth6900 ticker" },
+  { label: "Supply", value: token.supply, note: "Fixed supply — no minting, ever" },
+  { label: "Tax", value: "0%", note: "Zero buy and sell tax" },
+  { label: "LP", value: "Locked", note: "Liquidity locked at launch" },
 ];
 
 function makeSpark(seed, bias) {
@@ -229,7 +201,7 @@ const distribution = [
 ];
 
 const disclaimer =
-  "Roth6900 is an independent community meme token concept. It is not affiliated with Robinhood, SPX6900, the IRS, or any retirement, brokerage, securities, or tax authority. Roth6900 is not a Roth IRA, does not provide tax benefits, and is not financial, investment, legal, or tax advice. Crypto assets are volatile. Verify the contract before interacting with any token or link.";
+  "Roth6900 is an independent community meme token concept. It is not affiliated with Robinhood, the IRS, or any retirement, brokerage, securities, or tax authority. Roth6900 is not a Roth IRA, does not provide tax benefits, and is not financial, investment, legal, or tax advice. Crypto assets are volatile. Verify the contract before interacting with any token or link.";
 
 /* ------------------------------------------------------------------ *
  * Reusable pieces
@@ -498,15 +470,8 @@ function Header() {
   return (
     <header className="fixed inset-x-0 top-0 z-[60] bg-paper/95 backdrop-blur">
       <div className="mx-auto flex max-w-page items-center justify-between gap-4 px-4 py-3">
-        <a href="#top" className="flex items-center gap-3" aria-label="Roth6900 home">
-          <img
-            src="/roth6900-logo.png"
-            alt="Roth6900 logo"
-            className="h-9 w-9 shrink-0 border-2 border-ink object-cover"
-          />
-          <span className="font-serif text-2xl font-black leading-none">
-            Roth<span className="text-rh">6900</span>
-          </span>
+        <a href="#top" className="flex items-center" aria-label="Roth6900 home">
+          <img src="/roth6900-logo.png" alt="Roth6900" className="h-9 w-auto shrink-0" />
         </a>
         <nav className="hidden items-center gap-1 lg:flex">
           {navLinks.map((l) => (
@@ -563,8 +528,7 @@ function HeroForm() {
             </div>
             <div className="mt-5 grid gap-5 sm:grid-cols-[1fr_0.92fr]">
               <div className="space-y-3">
-                <FormField n="1a" label="Applicant" value="" />
-                <FormField n="1b" label="Ticker requested" value={token.ticker} />
+                <FormField n="1" label="Ticker requested" value={token.ticker} />
                 <FormField n="2" label="Chain" value={token.chain} />
                 <FormField n="3" label="Contribution" value="$6,900 vibes" />
                 <div className="border border-ink bg-cream p-3">
@@ -580,20 +544,12 @@ function HeroForm() {
               </div>
               <Certificate />
             </div>
-            <div className="mt-6 grid grid-cols-[1.5fr_1fr] gap-6">
-              <div>
-                <div className="h-9 border-b-2 border-ink font-serif text-2xl italic leading-9 text-ink/80"></div>
-                <div className="mt-1 font-mono text-[9px] uppercase tracking-[0.18em] text-ink/45">
-                  Signature of applicant
-                </div>
+            <div className="mt-6">
+              <div className="h-9 border-b-2 border-ink font-mono text-sm leading-9 tabular-nums">
+                07 / 07 / 2026
               </div>
-              <div>
-                <div className="h-9 border-b-2 border-ink font-mono text-sm leading-9 tabular-nums">
-                  07 / 07 / 2026
-                </div>
-                <div className="mt-1 font-mono text-[9px] uppercase tracking-[0.18em] text-ink/45">
-                  Date filed
-                </div>
+              <div className="mt-1 font-mono text-[9px] uppercase tracking-[0.18em] text-ink/45">
+                Date filed
               </div>
             </div>
             <div className="mt-5 flex items-end justify-between gap-4 border-t border-ink pt-3">
@@ -618,12 +574,8 @@ function Hero() {
             <span className="h-2 w-2 bg-rh" />
             First Roth IRA memecoin on {token.chain}
           </div>
-          <h1 className="rise mt-6 [animation-delay:90ms]">
-            <img
-              src="/roth6900-logo.png"
-              alt="Roth6900"
-              className="w-full max-w-md"
-            />
+          <h1 className="rise mt-6 font-serif text-[clamp(4.2rem,11vw,11rem)] font-black leading-[0.8] [animation-delay:90ms]">
+            Roth<span className="block text-rh">6900</span>
           </h1>
           <p className="rise mt-7 max-w-2xl font-serif text-3xl font-bold leading-[1.05] sm:text-[2.6rem] [animation-delay:180ms]">
             Don't buy a Roth IRA. Buy <em className="text-rh">Roth6900</em> and retire.
@@ -691,49 +643,6 @@ function Manifesto() {
             </article>
           </Reveal>
         ))}
-      </div>
-    </Section>
-  );
-}
-
-function Chain() {
-  return (
-    <Section id="chain" eyebrow="Schedule RH-1" page="3" title="Robinhood Chain facts, filed cleanly.">
-      <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-        <Reveal>
-          <div className="ruled h-full border-2 border-ink bg-greenpaper p-6">
-            <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink/55">
-              Source-aware narrative
-            </div>
-            <p className="mt-4 font-serif text-4xl font-black leading-[1.02]">
-              The story gets current chain context without pretending the meme is official.
-            </p>
-            <p className="mt-5 text-sm leading-7 text-ink/[0.72]">
-              Roth6900 can mention public mainnet, Arbitrum L2 architecture, tokenized-asset rails,
-              and 24/7 supported trading. It cannot borrow Robinhood branding, imply affiliation, or
-              sell fake tax benefits.
-            </p>
-          </div>
-        </Reveal>
-        <div className="border-2 border-ink bg-paper">
-          {chainFacts.map((fact, i) => (
-            <Reveal key={fact.label} delay={i * 0.04}>
-              <article className="grid gap-3 border-b border-ink p-5 last:border-b-0 sm:grid-cols-[0.9fr_0.8fr_1.3fr]">
-                <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink/55">
-                  <span className="mr-2 text-ink/35">{String(i + 1).padStart(2, "0")}</span>
-                  {fact.label}
-                </div>
-                <div className="font-serif text-2xl font-black leading-none text-rh">{fact.value}</div>
-                <div>
-                  <p className="text-sm leading-6 text-ink/[0.72]">{fact.body}</p>
-                  <div className="mt-2 font-mono text-[10px] uppercase tracking-[0.14em] text-ink/45">
-                    Source: {fact.source}
-                  </div>
-                </div>
-              </article>
-            </Reveal>
-          ))}
-        </div>
       </div>
     </Section>
   );
@@ -891,10 +800,14 @@ function Community() {
   return (
     <Section id="community" eyebrow="Part IV" page="6" title="Distribution labels.">
       <StaggerReveal className="border-2 border-ink bg-paper">
-        {distribution.map((item, i) => (
+        {distribution.map((item, i) => {
+          const external = /^https?:\/\//.test(item.href);
+          return (
           <a
             key={`${item.label}-${i}`}
             href={item.href}
+            target={external ? "_blank" : undefined}
+            rel={external ? "noopener noreferrer" : undefined}
             className="group flex items-baseline gap-4 px-6 py-5 transition-colors hover:bg-greenpaper/60"
           >
             <span className="font-mono text-xs tabular-nums text-ink/40">
@@ -908,7 +821,8 @@ function Community() {
               {item.note} ↗
             </span>
           </a>
-        ))}
+          );
+        })}
       </StaggerReveal>
     </Section>
   );
@@ -934,7 +848,6 @@ function Footer() {
             <p className="max-w-3xl text-sm leading-7 text-paper/75">{disclaimer}</p>
             <div className="mt-6 flex flex-wrap gap-3 font-mono text-[10px] uppercase tracking-[0.14em]">
               <span className="border border-paper/60 px-3 py-2">Not Robinhood</span>
-              <span className="border border-paper/60 px-3 py-2">Not SPX6900</span>
               <span className="border border-paper/60 px-3 py-2">Not an IRA</span>
               <span className="border border-paper/60 px-3 py-2">Verify contract</span>
             </div>
@@ -956,7 +869,6 @@ export default function App() {
       <Hero />
       <Marquee />
       <Manifesto />
-      <Chain />
       <Ledger />
       <Checklist />
       <Tokenomics />
