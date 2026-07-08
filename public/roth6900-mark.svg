@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Roth6900 mark">
+  <rect width="128" height="128" fill="#040503"/>
+  <path d="M18 100 35 70l16 11 21-41 15 20 20-34" fill="none" stroke="#96D002" stroke-width="10" stroke-linecap="square" stroke-linejoin="bevel"/>
+  <rect x="19" y="18" width="90" height="90" fill="none" stroke="#F4F7F0" stroke-width="4"/>
+  <text x="64" y="68" text-anchor="middle" font-family="monospace" font-size="28" font-weight="900" fill="#F4F7F0">6900</text>
+  <text x="64" y="91" text-anchor="middle" font-family="monospace" font-size="12" font-weight="900" fill="#96D002">ROTH</text>
+</svg>

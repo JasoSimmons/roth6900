@@ -1,0 +1,171 @@
+@import "https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700;9..40,900&family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,600..900,30,1;1,9..144,600..900,30,1&family=IBM+Plex+Mono:wght@400;600;700&display=swap";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+[id] {
+  scroll-margin-top: 7.5rem;
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+  background-color: #ffffff;
+  font-family: "DM Sans", system-ui, sans-serif;
+  color: #11120f;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: #96D002;
+  color: #11120f;
+}
+
+:focus-visible {
+  outline: 3px solid #96D002;
+  outline-offset: 4px;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-in {
+  opacity: 1;
+  transform: none;
+}
+
+.ruled {
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent 0px,
+    transparent 31px,
+    rgba(17, 18, 15, 0.07) 31px,
+    rgba(17, 18, 15, 0.07) 32px
+  );
+}
+
+.margin-line {
+  background-image: linear-gradient(
+    90deg,
+    transparent 0,
+    transparent 2.1rem,
+    rgba(199, 53, 43, 0.5) 2.1rem,
+    rgba(199, 53, 43, 0.5) calc(2.1rem + 1px),
+    transparent calc(2.1rem + 1px)
+  );
+}
+
+.perf {
+  background-image: radial-gradient(circle at 50% 50%, #ffffff 6px, transparent 7px),
+    radial-gradient(circle at 50% 50%, rgba(17, 18, 15, 0.35) 7px, transparent 8px);
+  background-size: 100% 56px;
+  background-repeat: repeat-y;
+  background-position: center 12px;
+}
+
+.leaders {
+  flex: 1;
+  margin: 0 0.4rem;
+  border-bottom: 2px dotted rgba(17, 18, 15, 0.45);
+  transform: translateY(-0.3em);
+}
+
+.btn-print {
+  border: 2px solid #11120f;
+  border-radius: 9999px;
+  transition: transform 0.12s ease, background-color 0.12s ease, color 0.12s ease;
+}
+
+.btn-print:active {
+  transform: translateY(1px);
+}
+
+.stamp-ink {
+  mix-blend-mode: multiply;
+  opacity: 0.92;
+}
+
+.draw-path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: draw 2.1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes drift {
+  0% {
+    transform: translate(0);
+  }
+  to {
+    transform: translate(-50%);
+  }
+}
+
+.animate-drift {
+  animation: drift 34s linear infinite;
+}
+
+@keyframes rise {
+  0% {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.rise {
+  opacity: 0;
+  animation: rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes thunk {
+  0% {
+    opacity: 0;
+    transform: scale(1.6) rotate(9deg);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(0.96) rotate(5deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(6deg);
+  }
+}
+
+.thunk {
+  animation: thunk 0.5s cubic-bezier(0.2, 0.9, 0.2, 1.2) 0.5s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *:before,
+  *:after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+  }
+}
