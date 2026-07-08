@@ -91,22 +91,25 @@ function useLiveMarketCap(refreshMs = 30000) {
 const token = {
   ticker: "$ROTH",
   chain: "Robinhood Chain",
-  contract: "TBA",
-  buyUrl: "#",
-  chartUrl: "#",
-  swapUrl: "#",
+  contract: "0xe252d24ff06ebaef2c7cebc79e7998515b378513",
+  buyUrl: "https://dexscreener.com/robinhood/0x63142696ae784efef1a3ca5f7a12a47176c6fed9",
+  chartUrl: "https://dexscreener.com/robinhood/0x63142696ae784efef1a3ca5f7a12a47176c6fed9",
+  swapUrl: "https://dexscreener.com/robinhood/0x63142696ae784efef1a3ca5f7a12a47176c6fed9",
   bridgeUrl: "#",
   supply: "1B",
-  // Live market data (Dexscreener). On launch, set `contract` to the real token
-  // address. Optionally pin an exact market by also setting both `chainId`
-  // (Dexscreener chain slug, e.g. "arbitrum") and `pairAddress`.
-  chainId: "",
-  pairAddress: "",
+  // Live market data (Dexscreener). `chainId` is the Dexscreener chain slug and
+  // `pairAddress` pins the exact market for the live chart + market cap.
+  chainId: "robinhood",
+  pairAddress: "0x63142696ae784efef1a3ca5f7a12a47176c6fed9",
 };
 
 const socials = {
   x: { label: "X", href: "https://x.com/roth6900", note: "Follow @Roth6900" },
-  dexscreener: { label: "Dexscreener", href: "#", note: "TODO: chart link" },
+  dexscreener: {
+    label: "Dexscreener",
+    href: "https://dexscreener.com/robinhood/0x63142696ae784efef1a3ca5f7a12a47176c6fed9",
+    note: "View live chart",
+  },
 };
 
 const navLinks = [
@@ -195,9 +198,8 @@ const ledger = [
 const distribution = [
   socials.x,
   socials.dexscreener,
-  { label: "Buy", href: token.buyUrl, note: "TODO: buy link" },
-  { label: "Swap", href: token.swapUrl, note: "TODO: swap link" },
-  { label: "Bridge", href: token.bridgeUrl, note: "TODO: bridge link" },
+  { label: "Buy", href: token.buyUrl, note: "Buy $ROTH" },
+  { label: "Swap", href: token.swapUrl, note: "Swap on Robinhood Chain" },
 ];
 
 const disclaimer =
@@ -595,7 +597,7 @@ function Hero() {
             </a>
           </div>
           <div className="rise mt-6 [animation-delay:420ms]">
-            <ContractCopy value={token.contract} label="CONTRACT TODO" />
+            <ContractCopy value={token.contract} label="CONTRACT" />
           </div>
         </section>
         <Reveal className="relative">
@@ -748,6 +750,11 @@ function Checklist() {
 }
 
 function Tokenomics() {
+  // Embed the real Dexscreener chart once a pair is configured (chainId + pairAddress).
+  const embedUrl =
+    token.chainId && token.pairAddress
+      ? `https://dexscreener.com/${token.chainId}/${token.pairAddress}?embed=1&theme=light&trades=0&info=0`
+      : null;
   const chartUrl =
     token.chartUrl && token.chartUrl !== "#"
       ? token.chartUrl
@@ -755,33 +762,39 @@ function Tokenomics() {
       ? `https://dexscreener.com/search?q=${encodeURIComponent(token.contract)}`
       : null;
   return (
-    <Section id="tokenomics" eyebrow="Part III" page="5" title="Cap table, before the contract exists.">
+    <Section id="tokenomics" eyebrow="Part III" page="5" title="Cap table, on the record.">
       <div className="grid gap-6 lg:grid-cols-[1fr_1.25fr]">
-        <Reveal>
-          <div className="border-2 border-ink bg-paper p-5">
+        <Reveal className="h-full">
+          <div className="flex h-full flex-col border-2 border-ink bg-paper p-5">
             <div className="flex items-start justify-between gap-4 border-b-2 border-ink pb-4">
               <div>
                 <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink/55">
                   Contract
                 </div>
                 <div className="mt-2">
-                  <ContractCopy value={token.contract} label="CONTRACT TODO" />
+                  <ContractCopy value={token.contract} label="CONTRACT" />
                 </div>
               </div>
-              <span className="border border-red px-2 py-1 font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-red">
-                Awaiting filing
+              <span className="inline-flex shrink-0 items-center gap-1.5 border border-rh px-2 py-1 font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-ink">
+                <span className="h-1.5 w-1.5 rounded-full bg-rh" />
+                Live
               </span>
             </div>
-            <p className="mt-5 text-sm leading-7 text-ink/[0.72]">
-              Contract, buy, swap, bridge, chart, socials, and liquidity proof are intentionally
-              marked TODO until cracka sends the real launch values.
-            </p>
-            {chartUrl ? (
+            {embedUrl ? (
+              <div className="mt-6 flex-1 border border-ink bg-paper">
+                <iframe
+                  src={embedUrl}
+                  title="Roth6900 live chart"
+                  loading="lazy"
+                  className="h-full min-h-[22rem] w-full"
+                />
+              </div>
+            ) : chartUrl ? (
               <a
                 href={chartUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group mt-6 block border border-ink bg-cream p-4 transition-colors hover:border-rh"
+                className="group mt-6 flex flex-1 flex-col justify-center border border-ink bg-cream p-4 transition-colors hover:border-rh"
               >
                 <TokenomicsChart />
                 <div className="mt-2 flex items-center justify-end font-mono text-[9px] uppercase tracking-[0.16em] text-ink/50 group-hover:text-rh">
@@ -789,8 +802,11 @@ function Tokenomics() {
                 </div>
               </a>
             ) : (
-              <div className="mt-6 border border-ink bg-cream p-4">
-                <TokenomicsChart />
+              <div className="mt-6 flex flex-1 flex-col items-center justify-center gap-2 border border-ink bg-cream p-4 text-center">
+                <div className="font-serif text-4xl font-black leading-none">Chart coming soon</div>
+                <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink/55">
+                  Live on launch
+                </div>
               </div>
             )}
           </div>
