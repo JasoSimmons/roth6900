@@ -139,7 +139,7 @@ const manifesto = [
   },
   {
     n: "03",
-    title: "This is not tax advice. It is tax theater.",
+    title: "This is not financial advice.",
     body: "Roth6900 is not a retirement product and gives you no IRA benefits.",
   },
 ];
@@ -147,26 +147,26 @@ const manifesto = [
 const checklist = [
   {
     n: "01",
-    title: "Open the vault",
-    body: "Get a compatible self-custody wallet ready for Robinhood Chain access.",
+    title: "Set up your wallet",
+    body: "Grab a self-custody wallet that connects to Robinhood Chain.",
     href: "#",
   },
   {
     n: "02",
-    title: "Find the rail",
-    body: "Bridge or route funds onto Robinhood Chain once official liquidity is live.",
+    title: "Fund it",
+    body: "Bridge or move funds onto Robinhood Chain once liquidity is live.",
     href: token.bridgeUrl,
   },
   {
     n: "03",
-    title: "Swap into Roth",
-    body: "Use the official swap link only after the real contract is published.",
+    title: "Buy $ROTH",
+    body: "Swap into Roth6900 through the official link once the contract is live.",
     href: token.swapUrl,
   },
   {
     n: "04",
-    title: "Hold the joke",
-    body: "Copy the contract, verify the chart, and let the retirement meme compound socially.",
+    title: "Retire",
+    body: "Copy the contract, verify the chart, and let Roth6900 handle the retiring.",
     href: token.chartUrl,
   },
 ];
